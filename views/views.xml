@@ -1,0 +1,79 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="invest.list">
+      <field name="name">invest list</field>
+      <field name="model">invest.invest</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="code"/>
+          <field name="rubriques"/>
+          <field name="report_et_anterieurs"/>
+          <field name="nouveaux_credits"/>
+          <field name="total_credits"/>
+          <field name="credits_dengagement"/>
+        </tree>
+      </field>
+    </record>
+    
+
+    <!-- actions opening views on models -->
+    
+    <record model="ir.actions.act_window" id="invest.action_window">
+      <field name="name">invest window</field>
+      <field name="res_model">invest.invest</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+    <record model="ir.ui.view" id="invest_search_view">
+      <field name="name">invest.search</field>
+      <field name="model">invest.invest</field>
+      <field name="arch" type="xml">
+          <search>
+              <field name="code"/>
+              <filter name="arti" string="My arti"
+                      domain="[('responsible_id', '=', uid)]"/>
+
+              <group string="Group By">
+                  <filter name="by_responsible" string="Responsible"
+                          context="{'group_by': 'code'}"/>
+              </group>
+          </search>
+      </field>
+  </record>
+
+    <!-- server action to the one above -->
+    
+    <record model="ir.actions.server" id="invest.action_server">
+      <field name="name">invest server</field>
+      <field name="model_id" ref="model_invest_invest"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+
+    <!-- Top menu item -->
+    
+    <menuitem name="invest" id="invest.menu_root"/>
+    
+    <!-- menu categories -->
+    
+    <menuitem name="Menu 1" id="invest.menu_1" parent="invest.menu_root"/>
+    <menuitem name="Menu 2" id="invest.menu_2" parent="invest.menu_root"/>
+    
+    <!-- actions -->
+    
+    <menuitem name="List" id="invest.menu_1_list" parent="invest.menu_1"
+              action="invest.action_window"/>
+    <menuitem name="Server to list" id="invest" parent="invest.menu_2"
+              action="invest.action_server"/>
+    
+  </data>
+</odoo>
